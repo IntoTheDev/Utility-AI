@@ -23,6 +23,30 @@ namespace ToolBox.UtilityAI
 			return totalScore;
 		}
 
+		public void Enter()
+		{
+			foreach (var scorer in _scorers)
+				scorer.Enter();
+
+			foreach (var action in _actions)
+				action.Enter();
+		}
+
+		public void Execute()
+		{
+			foreach (var action in _actions)
+				action.Execute();
+		}
+
+		public void Exit()
+		{
+			foreach (var scorer in _scorers)
+				scorer.Exit();
+
+			foreach (var action in _actions)
+				action.Exit();
+		}
+
 		public State AddScorer(IScorer scorer)
 		{
 			if (!_scorers.Contains(scorer))
@@ -107,24 +131,6 @@ namespace ToolBox.UtilityAI
 
 			RemoveAction(action);
 			return true;
-		}
-
-		public void Enter()
-		{
-			foreach (var action in _actions)
-				action.Enter();
-		}
-
-		public void Execute()
-		{
-			foreach (var action in _actions)
-				action.Execute();
-		}
-
-		public void Exit()
-		{
-			foreach (var action in _actions)
-				action.Exit();
 		}
 	}
 }
