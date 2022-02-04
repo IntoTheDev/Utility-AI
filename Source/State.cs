@@ -6,6 +6,7 @@ namespace ToolBox.UtilityAI
 	{
 		private readonly List<IScorer> _scorers = new();
 		private readonly List<IAction> _actions = new();
+		private bool _isActive;
 
 		public int GetTotalScore()
 		{
@@ -30,6 +31,8 @@ namespace ToolBox.UtilityAI
 
 			foreach (var action in _actions)
 				action.Enter();
+
+			_isActive = true;
 		}
 
 		public void Execute()
@@ -45,20 +48,32 @@ namespace ToolBox.UtilityAI
 
 			foreach (var action in _actions)
 				action.Exit();
+
+			_isActive = false;
 		}
 
 		public State AddScorer(IScorer scorer)
 		{
-			if (!_scorers.Contains(scorer))
-				_scorers.Add(scorer);
+			if (_scorers.Contains(scorer))
+				return this;
+
+			if (_isActive)
+				scorer.Enter();
+
+			_scorers.Add(scorer);
 
 			return this;
 		}
 
 		public State RemoveScorer(IScorer scorer)
 		{
-			if (_scorers.Contains(scorer))
-				_scorers.Remove(scorer);
+			if (!_scorers.Contains(scorer))
+				return this;
+			
+			if (_isActive)
+				scorer.Exit();
+			
+			_scorers.Remove(scorer);
 
 			return this;
 		}
@@ -92,16 +107,26 @@ namespace ToolBox.UtilityAI
 
 		public State AddAction(IAction action)
 		{
-			if (!_actions.Contains(action))
-				_actions.Add(action);
+			if (_actions.Contains(action))
+				return this;
+			
+			if (_isActive)
+				action.Enter();
+			
+			_actions.Add(action);
 
 			return this;
 		}
 
 		public State RemoveAction(IAction action)
 		{
-			if (_actions.Contains(action))
-				_actions.Remove(action);
+			if (!_actions.Contains(action))
+				return this;
+			
+			if (_isActive)
+				action.Exit();
+			
+			_actions.Remove(action);
 
 			return this;
 		}

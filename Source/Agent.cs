@@ -2,7 +2,7 @@
 
 namespace ToolBox.UtilityAI
 {
-	public class Brain
+	public class Agent
 	{
 		private readonly List<State> _states = new();
 		private State _currentState;
@@ -21,7 +21,7 @@ namespace ToolBox.UtilityAI
 			_currentState?.Execute();
 		}
 
-		public Brain AddState(State state)
+		public Agent AddState(State state)
 		{
 			if (!_states.Contains(state))
 				_states.Add(state);
@@ -29,7 +29,7 @@ namespace ToolBox.UtilityAI
 			return this;
 		}
 
-		public Brain RemoveState(State state)
+		public Agent RemoveState(State state)
 		{
 			if (!_states.Contains(state))
 				return this;
